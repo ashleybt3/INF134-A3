@@ -45,88 +45,6 @@ var MyToolkit = (function() {
         }
     }
     
-    var RadioButton = function() {
-        var window = draw.group();
-        window.rect(150,100).stroke('black').fill('white')
-
-        var button = draw.group();
-
-        var selectedButton = null
-
-        
-        var rdiobtn1 = button.circle(20,20).stroke('black').fill('white')
-
-        rdiobtn1.move(10,10)
-        rdiobtn1.attr('id', 'buttonOne')
-
-        var rdiobtn2 = button.circle(20,20).stroke('black').fill('white')
-        rdiobtn2.move(10,40)
-        rdiobtn2.attr('id', 'buttonTwo')
-
-        var rdiobtn3 = button.circle(20,20).stroke('black').fill('white')
-        rdiobtn3.move(10,70)
-        rdiobtn3.attr('id', 'buttonThree')
-
-        var label = draw.group();
-        var text1 = label.text('Radio Button 1').move(40,10);
-        var text2 = label.text('Radio Button 2').move(40,40);
-        var text3 = label.text('Radio Button 3').move(40,70);
-        
-        
-
-        window.add(button)
-        window.add(label)
-        rdiobtn1.click(function(id){
-            // console.log(id['srcElement']['id']);
-            if(selectedButton == 'buttonThree'){
-                rdiobtn3.fill('white').stroke({color: 'black', width: 1 })
-            }
-            else if(selectedButton == 'buttonTwo'){
-                rdiobtn2.fill('white').stroke({color: 'black', width: 1 })
-                
-            }
-            selectedButton = 'buttonOne'
-            rdiobtn1.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
-        })
-
-        rdiobtn2.click(function(id){
-            // console.log(id['srcElement']['id']);           
-            if(selectedButton == 'buttonThree'){
-                rdiobtn3.fill('white').stroke({color: 'black', width: 1 })
-            }
-            else if(selectedButton == 'buttonOne'){
-                rdiobtn1.fill('white').stroke({color: 'black', width: 1 })
-
-            }
-            selectedButton = 'buttonTwo'
-            rdiobtn2.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
-
-        })
-
-        rdiobtn3.click(function(id){
-            // console.log(id['srcElement']['id']);           
-            if(selectedButton == 'buttonTwo'){
-                rdiobtn2.fill('white').stroke({color: 'black', width: 1 })
-            }
-            else if(selectedButton == 'buttonOne'){
-                rdiobtn1.fill('white').stroke({color: 'black', width: 1 })
-
-            }
-            selectedButton = 'buttonThree'
-            rdiobtn3.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
-
-        })
-
-        return {
-            move: function(x,y){
-                window.move(x,y)
-            }
-        }
-
-
-    }
-    
-
     var CheckBox = function(){
 
         
@@ -180,6 +98,78 @@ var MyToolkit = (function() {
 
         }
     }
+
+    var RadioButton = function() {
+        // var window = draw.group();
+        // window.rect(150,100).stroke('black').fill('white')
+
+        var button = draw.group();
+
+        var widgetState = null
+        var checkedState = null
+        
+        var rdiobtn1 = button.circle(20,20).stroke('black').fill('white')
+
+        rdiobtn1.move(10,10)
+        rdiobtn1.attr('id', 'buttonOne')
+
+        var rdiobtn2 = button.circle(20,20).stroke('black').fill('white')
+        rdiobtn2.move(10,40)
+        rdiobtn2.attr('id', 'buttonTwo')
+
+        var text1 = button.text('').move(40,5);
+        var text2 = button.text('').move(40,35);
+        
+        rdiobtn1.click(function(event){
+            // console.log(id['srcElement']['id']);
+            rdiobtn2.fill('white').stroke({color: 'black', width: 1 })
+            rdiobtn1.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
+            widgetState(event)
+            checkedState(event)
+        })
+
+        rdiobtn2.click(function(event){
+            // console.log(id['srcElement']['id']);           
+            rdiobtn1.fill('white').stroke({color: 'black', width: 1 })
+            rdiobtn2.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
+            widgetState(event)
+            checkedState(event)
+        })
+
+        rdiobtn1.mouseover(function(event){
+            widgetState(event)
+        })
+        rdiobtn1.mouseout(function(event){
+            widgetState(event)
+        })
+        rdiobtn2.mouseover(function(event){
+            widgetState(event)
+        })
+        rdiobtn2.mouseout(function(event){
+            widgetState(event)
+        })
+
+        return {
+            move: function(x,y){
+                button.move(x,y)
+            },
+            labelOne: function(x){
+                text1.text(x)
+            },
+            labelTwo: function(x){
+                text2.text(x)
+            },
+            state: function(eventHandler){
+                widgetState = eventHandler
+            },
+            onclick: function(eventHandler){
+                checkedState = eventHandler
+            }
+        }
+
+
+    }
+    
     var TextBox = function(){
         var box = draw.group();
         box.rect(350,200).stroke('black').fill('white')

@@ -30,9 +30,18 @@ checkbox.state(function(e){
 });
 
 // Implement a MyToolkit Radio Button
-var rdiobtn = new MyToolkit.RadioButton;
-rdiobtn.move(450,50);
-
+var radiobtn = new MyToolkit.RadioButton;
+radiobtn.move(450,50);
+radiobtn.labelOne('Radio Button 1');
+radiobtn.labelTwo('Radio Button 2');
+radiobtn.state(function(e){
+	console.log('Widget state has been changed!')
+	console.log(e);
+});
+radiobtn.onclick(function(e){
+	console.log('Checked state has been changed:', e.target.id, 'has been selected!');
+	console.log(e)
+})
 
 // Implement a MyToolkit Text Box
 var textbox = new MyToolkit.TextBox;
