@@ -7,12 +7,12 @@ var btn = new MyToolkit.Button;
 btn.move(50,50);
 btn.label('Button');
 btn.state(function(e){
-	console.log('State has been changed!')
+	console.log('Button widget state has been changed!')
 	console.log(e);
 	
 });
 btn.onclick(function(e){
-	console.log('Button has been cicked!')
+	console.log('Button has been clicked!')
 	console.log(e);
 });
 
@@ -25,7 +25,7 @@ checkbox.onclick(function(e){
 	console.log(e);
 });
 checkbox.state(function(e){
-	console.log('Widget state has been changed!')
+	console.log('Check Box widget state has been changed!')
 	console.log(e);
 });
 
@@ -35,17 +35,28 @@ radiobtn.move(450,50);
 radiobtn.labelOne('Radio Button 1');
 radiobtn.labelTwo('Radio Button 2');
 radiobtn.state(function(e){
-	console.log('Widget state has been changed!')
+	console.log('Radio Button widget state has been changed!')
 	console.log(e);
 });
 radiobtn.onclick(function(e){
 	console.log('Checked state has been changed:', e.target.id, 'has been selected!');
-	console.log(e)
+	console.log(e);
 })
 
 // Implement a MyToolkit Text Box
 var textbox = new MyToolkit.TextBox;
 textbox.move(50, 200);
+textbox.content(function(text){
+	console.log('Current Output:', text);
+})
+textbox.keyup(function(e){
+	console.log('Text content has been changed!')
+	console.log(e);
+})
+textbox.state(function(e){
+	console.log('Text Box widget state has been changed!')
+	console.log(e);
+});
 
 var progressbar = new MyToolkit.ProgressBar;
 progressbar.move(450, 200);

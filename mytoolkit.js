@@ -100,9 +100,6 @@ var MyToolkit = (function() {
     }
 
     var RadioButton = function() {
-        // var window = draw.group();
-        // window.rect(150,100).stroke('black').fill('white')
-
         var button = draw.group();
 
         var widgetState = null
@@ -121,15 +118,13 @@ var MyToolkit = (function() {
         var text2 = button.text('').move(40,35);
         
         rdiobtn1.click(function(event){
-            // console.log(id['srcElement']['id']);
             rdiobtn2.fill('white').stroke({color: 'black', width: 1 })
             rdiobtn1.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
             widgetState(event)
             checkedState(event)
         })
 
-        rdiobtn2.click(function(event){
-            // console.log(id['srcElement']['id']);           
+        rdiobtn2.click(function(event){       
             rdiobtn1.fill('white').stroke({color: 'black', width: 1 })
             rdiobtn2.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
             widgetState(event)
@@ -166,37 +161,64 @@ var MyToolkit = (function() {
                 checkedState = eventHandler
             }
         }
-
-
     }
     
     var TextBox = function(){
         var box = draw.group();
-        box.rect(350,200).stroke('black').fill('white')
+        var textContent = null
+        var textChanged = null
+        var widgetState = null
+        box.rect(350,150).stroke('black').fill('white')
 
         var text = box.text("").move(40,42)
         var caret = box.rect(2,15).move(50,50)
         var runner = caret.animate().width(0)
         runner.loop(10000,1,0)
+        box.click(function(event){
+            widgetState(event)
+        })
+        box.mouseover(function(event){
+            widgetState(event)
+        })
+        box.mouseout(function(event){
+            widgetState(event)
+        })
         SVG.on(window, 'keyup', (event) => {
-            if(event.key == ' '){
+            if(event.key == "Shift" || event.key == "CapsLock"){}
+            else if(event.key == ' '){
                 text.text(text.text() + event.key)
                 caret.x(text.length() + 100)
+                textContent(text.text())
+                textChanged(event)
+                widgetState(event)
             }
             else if(event.key == 'Backspace'){
                 text.text(text.text().slice(0, -1))
                 caret.x(text.length() + 90)
-            }
-            else if(event.key == "Shift" || event.key == "CapsLock"){
+                textContent(text.text())
+                textChanged(event)
+                widgetState(event)
             }
             else{
                 text.text(text.text() + event.key)
                 caret.x(text.length() + 90)
+                textContent(text.text())
+                textChanged(event)
+                widgetState(event)
             }
         })
         return {
             move: function(x,y){
                 box.move(x,y);
+            },
+            content: function(output){
+                textContent = output
+            },
+            keyup: function(eventHandler){
+                textChanged = eventHandler
+            },
+            state: function(eventHandler){
+                widgetState = eventHandler
             }
         }
     }
