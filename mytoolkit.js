@@ -128,10 +128,10 @@ var MyToolkit = (function() {
     
 
     var CheckBox = function(){
-        // var window = draw.group();
-        // window.rect(150,75).stroke('black').fill('white')
+
         
         var currentState = null
+        var widgetState = null
         var clickedState = false
         var box = draw.group();
         
@@ -142,54 +142,28 @@ var MyToolkit = (function() {
         var line1 = box.line(8, 15, 15, 8).stroke({ width: 2, color: "white", linecap: 'round' })
         var line2 = box.line(6, 11, 8, 15).stroke({ width: 2, color: "white" , linecap: 'round'})
 
-        // var label = draw.group();
         var text = box.text('').move(30,-5);
-        box.move(10,20);
-        // window.add(label)
-        // window.add(box)
-        // box.click(function(event){
-        //     currentState(event)
-        // })
         
-        
+        box.mouseover(function(event){
+            widgetState(event)
+        })
+        box.mouseout(function(event){
+            widgetState(event)
+        })
         box.click(function(event){
             // make it a clicked state
             if(!clickedState){
                 rect.stroke('#b366ff').fill('#b366ff')
-                currentState(event)
                 clickedState = true
             }
             // make it an unclicked state
             else{
                 rect.stroke('grey').fill('white')
                 clickedState = false
-                // console.log(event)
             }
-            // currentState(event)
+            currentState(event)
+            
         })
-        // line1.click(function(event){
-        //     if(clickEvent == null){
-        //         rect.stroke('#b366ff').fill('#b366ff')
-                
-        //         clickEvent = event
-        //     }
-        //     else{
-        //         rect.stroke('grey').fill('white')
-        //         clickEvent = null
-        //     }
-        // })
-        // line2.click(function(event){
-        //     if(clickEvent == null){
-        //         rect.stroke('#b366ff').fill('#b366ff')
-                
-        //         clickEvent = event
-        //     }
-        //     else{
-        //         rect.stroke('grey').fill('white')
-        //         clickEvent = null
-        //     }
-        // })
-        
         return {
             move: function(x, y) {
                 box.move(x, y);
@@ -197,9 +171,13 @@ var MyToolkit = (function() {
             label: function(x){
                 text.text(x);
             },
-            state: function(eventHandler){
+            onclick: function(eventHandler){
                 currentState =  eventHandler
+            },
+            state: function(eventHandler){
+                widgetState = eventHandler
             }
+
         }
     }
     var TextBox = function(){

@@ -20,10 +20,13 @@ btn.onclick(function(e){
 var checkbox = new MyToolkit.CheckBox;
 checkbox.move(250,60);
 checkbox.label('Check Box');
+checkbox.onclick(function(e){
+	console.log('Checked state has been changed!')
+	console.log(e);
+});
 checkbox.state(function(e){
-	if(e != null){
-		console.log(e);
-	}
+	console.log('Widget state has been changed!')
+	console.log(e);
 });
 
 // Implement a MyToolkit Radio Button
