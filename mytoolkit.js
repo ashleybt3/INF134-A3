@@ -2,6 +2,8 @@
 
 import {SVG} from './svg.min.js';
 
+
+
 var MyToolkit = (function() {
     var draw = SVG().addTo('body').size('100%','100%');
     var Button = function(){
@@ -9,6 +11,8 @@ var MyToolkit = (function() {
         var button = draw.group();
         var rect = button.rect(100,40).fill('#f2e6ff')
         var text = button.text('').move(25,5)
+        text.attr('font-family', 'arial')
+        
         var currentState = null
         var clickState = null
 
@@ -17,15 +21,18 @@ var MyToolkit = (function() {
 
         button.mouseover(function(event){
             rect.fill({ color: '#e5ccff'})
+            rect.attr('cursor', 'pointer')
             currentState(event)
         })
         button.mouseout(function(event){
             rect.stroke('black').fill('#f2e6ff')
+            rect.attr('cursor', 'auto')
             currentState(event)
         })
         
         button.click(function(event){
             rect.fill({ color: '#ccbddb'})
+            rect.attr('cursor', 'auto')
             currentState(event)
             clickState(event)
         })
@@ -56,19 +63,23 @@ var MyToolkit = (function() {
         var rect = box.rect(20, 20).fill("white").stroke("grey")
         rect.attr('rx', 3)
         rect.attr('stroke-width', 2)
+        
   
         var line1 = box.line(8, 15, 15, 8).stroke({ width: 2, color: "white", linecap: 'round' })
         var line2 = box.line(6, 11, 8, 15).stroke({ width: 2, color: "white" , linecap: 'round'})
 
         var text = box.text('').move(30,-5);
+        text.attr('font-family', 'arial')
         
-        box.mouseover(function(event){
+        rect.mouseover(function(event){
             widgetState(event)
+            rect.attr('cursor', 'pointer')
         })
-        box.mouseout(function(event){
+        rect.mouseout(function(event){
             widgetState(event)
+            rect.attr('cursor', 'auto')
         })
-        box.click(function(event){
+        rect.click(function(event){
             // make it a clicked state
             if(!clickedState){
                 rect.stroke('#b366ff').fill('#b366ff')
@@ -80,6 +91,53 @@ var MyToolkit = (function() {
                 clickedState = false
             }
             currentState(event)
+            box.attr('cursor', 'auto')
+            
+        })
+        line1.mouseover(function(event){
+            widgetState(event)
+            line1.attr('cursor', 'pointer')
+        })
+        line1.mouseout(function(event){
+            widgetState(event)
+            line1.attr('cursor', 'auto')
+        })
+        line1.click(function(event){
+            // make it a clicked state
+            if(!clickedState){
+                rect.stroke('#b366ff').fill('#b366ff')
+                clickedState = true
+            }
+            // make it an unclicked state
+            else{
+                rect.stroke('grey').fill('white')
+                clickedState = false
+            }
+            currentState(event)
+            line1.attr('cursor', 'auto')
+            
+        })
+        line2.mouseover(function(event){
+            widgetState(event)
+            line2.attr('cursor', 'pointer')
+        })
+        line2.mouseout(function(event){
+            widgetState(event)
+            line2.attr('cursor', 'auto')
+        })
+        line2.click(function(event){
+            // make it a clicked state
+            if(!clickedState){
+                rect.stroke('#b366ff').fill('#b366ff')
+                clickedState = true
+            }
+            // make it an unclicked state
+            else{
+                rect.stroke('grey').fill('white')
+                clickedState = false
+            }
+            currentState(event)
+            line2.attr('cursor', 'auto')
             
         })
         return {
@@ -109,19 +167,24 @@ var MyToolkit = (function() {
 
         rdiobtn1.move(10,10)
         rdiobtn1.attr('id', 'buttonOne')
+        
 
         var rdiobtn2 = button.circle(20,20).stroke('black').fill('white')
         rdiobtn2.move(10,40)
         rdiobtn2.attr('id', 'buttonTwo')
+        
 
         var text1 = button.text('').move(40,5);
         var text2 = button.text('').move(40,35);
+        text1.attr('font-family', 'arial')
+        text2.attr('font-family', 'arial')
         
         rdiobtn1.click(function(event){
             rdiobtn2.fill('white').stroke({color: 'black', width: 1 })
             rdiobtn1.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
             widgetState(event)
             checkedState(event)
+            rdiobtn1.attr('cursor', 'auto')
         })
 
         rdiobtn2.click(function(event){       
@@ -129,19 +192,24 @@ var MyToolkit = (function() {
             rdiobtn2.fill('white').stroke({color: '#b366ff', opacity: 0.8, width: 5 })
             widgetState(event)
             checkedState(event)
+            rdiobtn2.attr('cursor', 'auto')
         })
 
         rdiobtn1.mouseover(function(event){
             widgetState(event)
+            rdiobtn1.attr('cursor', 'pointer')
         })
         rdiobtn1.mouseout(function(event){
             widgetState(event)
+            rdiobtn1.attr('cursor', 'auto')
         })
         rdiobtn2.mouseover(function(event){
             widgetState(event)
+            rdiobtn2.attr('cursor', 'pointer')
         })
         rdiobtn2.mouseout(function(event){
             widgetState(event)
+            rdiobtn2.attr('cursor', 'auto')
         })
 
         return {
@@ -168,10 +236,11 @@ var MyToolkit = (function() {
         var textContent = null
         var textChanged = null
         var widgetState = null
-        box.rect(350,150).stroke('black').fill('white')
+        box.rect(350,150).stroke('black').fill('#f2e6ff')
 
         var text = box.text("").move(40,42)
         var caret = box.rect(2,15).move(50,50)
+
         var runner = caret.animate().width(0)
         runner.loop(10000,1,0)
         box.click(function(event){
@@ -224,8 +293,115 @@ var MyToolkit = (function() {
     }
 
     var ScrollBar = function(){
+        var box = draw.group();
+        var bar = box.rect(21, 300).stroke('grey').fill('white')
+        var up = box.rect(21, 21).stroke('grey').fill('#ccc9cf').move(0,-21)
+        var upArrow = box.text('˄').move(5,-24)
+        upArrow.attr('font-size', 30)
+        upArrow.attr('cursor', 'default')
 
+        var down = box.rect(21, 21).stroke('grey').fill('#ccc9cf').move(0, 300)
+        var downArrow = box.text('ˬ').move(5,280)
+        downArrow.attr('font-size', 30)
+        var scroll = box.rect(18,21).stroke('#ccc2d6').fill('#ccbade').move(1.5,1)
+
+        scroll.attr('cursor', 'point')
+
+        var isClicked = null
+
+
+        scroll.mousedown(function(event){
+            console.log('mouse down')
+
+            scroll.mousemove(function(e){
+                if(e.y > 50 && e.y < 357){
+                    // top of scroll bar
+                    if(e.y < 72){
+                        scroll.attr('y', 50)
+                    }
+                    // bottom of scroll bar
+                    else if(e.y > 349){
+                        scroll.attr('y', 327)
+                    }
+                    else{
+                        scroll.attr('y', e.y - 21)
+                    }
+                }
+            })
+        })
+
+        scroll.mouseup(function(evt){
+            console.log('mouse stops')
+            scroll.off('mousemove')
+        })
+        scroll.mouseleave(function(evt){
+            console.log('mouse stops')
+            scroll.off('mousemove')
+        })
+        
+        
+        
+        bar.click(function(event){
+            console.log('mouse click')
+
+            if(event.y > 50 && event.y < 357){
+                // top of scroll bar
+                if(event.y < 72){
+                    scroll.attr('y', 50)
+                }
+                // bottom of scroll bar
+                else if(event.y > 349){
+                    scroll.attr('y', 327)
+                }
+                else{
+                    scroll.attr('y', event.y - 21)
+                }
+                isClicked(event)
+            }
+        })
+
+        up.click(function(event){
+            console.log('up')
+            var currentY = scroll.attr('y')
+            console.log(currentY)
+            if(currentY > 50){
+                if(currentY < 55){
+                    scroll.attr('y', 50)
+                }
+                else{
+                    scroll.attr('y', currentY - 5)
+                }
+                
+            }
+            
+        })
+       
+
+        down.click(function(event){
+            console.log('down')
+            var currentY = scroll.attr('y')
+            console.log(currentY)
+            if(currentY < 330 ){
+                if(currentY > 321){
+                    scroll.attr('y', 327)
+                }
+                else{
+                    scroll.attr('y', currentY + 5)
+                }
+                
+            }
+        })
+       
+        return{
+            move: function(x,y){
+                box.move(x,y);
+            },
+            onclick: function(eventHandler){
+                isClicked = eventHandler
+            }
+        }
     }
+
 
     var ProgressBar = function(){
         var box = draw.group();
@@ -238,7 +414,7 @@ var MyToolkit = (function() {
         loadbar.attr('rx', 8)
         var progress = bar.rect(0, 14).stroke('black').fill('#ce99ff').move(3,3)
         progress.attr('rx', 8)
-        var runner = progress.animate().delay(100).animate().size(293,14)
+        var runner = progress.animate(300, '-').delay(100).animate().size(293,14)
 
         
         box.add(bar)
@@ -248,7 +424,7 @@ var MyToolkit = (function() {
                 box.move(x,y);
             },
             width: function(x,y){
-                loadbar.size(x,y)
+                loadbar.size(x,y);
             }
         }
     }

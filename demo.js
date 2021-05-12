@@ -2,6 +2,7 @@
 
 import {MyToolkit} from './mytoolkit.js';
 
+
 // Implement a MyToolkit Button
 var btn = new MyToolkit.Button;
 btn.move(50,50);
@@ -55,6 +56,13 @@ textbox.keyup(function(e){
 })
 textbox.state(function(e){
 	console.log('Text Box widget state has been changed!')
+	console.log(e);
+});
+
+var scrollbar = new MyToolkit.ScrollBar;
+scrollbar.move(800, 28);
+scrollbar.onclick(function(e){
+	console.log('Scroll Bar state has been changed!')
 	console.log(e);
 });
 
