@@ -295,17 +295,25 @@ var MyToolkit = (function() {
     var ScrollBar = function(){
         var box = draw.group();
         var bar = box.rect(21, 300).stroke('grey').fill('white')
-        var up = box.rect(21, 21).stroke('grey').fill('#ccc9cf').move(0,-21)
-        var upArrow = box.text('˄').move(5,-24)
-        upArrow.attr('font-size', 30)
-        upArrow.attr('cursor', 'default')
 
-        var down = box.rect(21, 21).stroke('grey').fill('#ccc9cf').move(0, 300)
-        var downArrow = box.text('ˬ').move(5,280)
-        downArrow.attr('font-size', 30)
+        var up = draw.group();
+        var upBox = up.rect(21, 21).stroke('grey').fill('#ccc9cf')
+        // var upArrow = box.text('˄').move(5,-24)
+        var upArrow1 = up.line(10, 10, 15, 15).stroke({ width: 2, color: "black", linecap: 'round' })
+        var upArrow2 = up.line(5, 15, 10, 10).stroke({ width: 2, color: "black" , linecap: 'round'})
+        up.move(800,29)
+        
+
+        var down = draw.group();
+        var downBox = down.rect(21, 21).stroke('grey').fill('#ccc9cf')
+        // var downArrow = box.text('ˬ').move(5,280)
+        // var downArrow1 = down.line(10, 315, 15, 305).stroke({ width: 2, color: "black", linecap: 'round' })
+        // var downArrow2 = down.line(5, 305, 10, 315).stroke({ width: 2, color: "black" , linecap: 'round'})
+        var downArrow1 = down.line(10, 15, 15, 10).stroke({ width: 2, color: "black", linecap: 'round' })
+        var downArrow2 = down.line(5, 10, 10, 15).stroke({ width: 2, color: "black" , linecap: 'round'})
+        down.move(800, 350)
+
         var scroll = box.rect(18,21).stroke('#ccc2d6').fill('#ccbade').move(1.5,1)
-
-        scroll.attr('cursor', 'point')
 
         var isClicked = null
 
@@ -317,11 +325,11 @@ var MyToolkit = (function() {
                 if(e.y > 50 && e.y < 357){
                     // top of scroll bar
                     if(e.y < 72){
-                        scroll.attr('y', 50)
+                        scroll.attr('y', 51)
                     }
                     // bottom of scroll bar
                     else if(e.y > 349){
-                        scroll.attr('y', 327)
+                        scroll.attr('y', 328)
                     }
                     else{
                         scroll.attr('y', e.y - 21)
@@ -340,18 +348,17 @@ var MyToolkit = (function() {
         })
         
         
-        
         bar.click(function(event){
             console.log('mouse click')
 
             if(event.y > 50 && event.y < 357){
                 // top of scroll bar
                 if(event.y < 72){
-                    scroll.attr('y', 50)
+                    scroll.attr('y', 51)
                 }
                 // bottom of scroll bar
                 else if(event.y > 349){
-                    scroll.attr('y', 327)
+                    scroll.attr('y', 328)
                 }
                 else{
                     scroll.attr('y', event.y - 21)
@@ -366,7 +373,7 @@ var MyToolkit = (function() {
             console.log(currentY)
             if(currentY > 50){
                 if(currentY < 55){
-                    scroll.attr('y', 50)
+                    scroll.attr('y', 51)
                 }
                 else{
                     scroll.attr('y', currentY - 5)
@@ -383,7 +390,7 @@ var MyToolkit = (function() {
             console.log(currentY)
             if(currentY < 330 ){
                 if(currentY > 321){
-                    scroll.attr('y', 327)
+                    scroll.attr('y', 328)
                 }
                 else{
                     scroll.attr('y', currentY + 5)

@@ -60,7 +60,7 @@ textbox.state(function(e){
 });
 
 var scrollbar = new MyToolkit.ScrollBar;
-scrollbar.move(800, 28);
+scrollbar.move(800, 50);
 scrollbar.onclick(function(e){
 	console.log('Scroll Bar state has been changed!')
 	console.log(e);
