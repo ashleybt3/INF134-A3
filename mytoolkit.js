@@ -295,33 +295,43 @@ var MyToolkit = (function() {
     var ScrollBar = function(){
         var box = draw.group();
         var bar = box.rect(21, 300).stroke('grey').fill('white')
+        bar.move(0,21)
 
         var up = draw.group();
         var upBox = up.rect(21, 21).stroke('grey').fill('#ccc9cf')
-        // var upArrow = box.text('˄').move(5,-24)
+        
+
         var upArrow1 = up.line(10, 10, 15, 15).stroke({ width: 2, color: "black", linecap: 'round' })
         var upArrow2 = up.line(5, 15, 10, 10).stroke({ width: 2, color: "black" , linecap: 'round'})
-        up.move(800,29)
+
         
 
         var down = draw.group();
         var downBox = down.rect(21, 21).stroke('grey').fill('#ccc9cf')
-        // var downArrow = box.text('ˬ').move(5,280)
-        // var downArrow1 = down.line(10, 315, 15, 305).stroke({ width: 2, color: "black", linecap: 'round' })
-        // var downArrow2 = down.line(5, 305, 10, 315).stroke({ width: 2, color: "black" , linecap: 'round'})
+
         var downArrow1 = down.line(10, 15, 15, 10).stroke({ width: 2, color: "black", linecap: 'round' })
         var downArrow2 = down.line(5, 10, 10, 15).stroke({ width: 2, color: "black" , linecap: 'round'})
-        down.move(800, 350)
+        down.move(0, 321)
 
-        var scroll = box.rect(18,21).stroke('#ccc2d6').fill('#ccbade').move(1.5,1)
+        var scroll = box.rect(18,21).stroke('#ccc2d6').fill('#ccbade').move(1.5,21)
 
         var isClicked = null
+        var currentLocation = scroll.attr('y')
+        var direction = null
+        var widgetState = null
 
+        box.add(up)
+        box.add(down)
+        box.move(800, 50);
+
+        console.log(bar.y())
 
         scroll.mousedown(function(event){
-            console.log('mouse down')
+            // console.log('mouse down')
 
             scroll.mousemove(function(e){
+                // scroll.attr('y', event.y)
+                
                 if(e.y > 50 && e.y < 357){
                     // top of scroll bar
                     if(e.y < 72){
@@ -334,22 +344,37 @@ var MyToolkit = (function() {
                     else{
                         scroll.attr('y', e.y - 21)
                     }
+                    var distance = currentLocation - event.y
+                    if(distance > 0){
+                        direction('up')
+                    }
+                    else{
+                        direction('down')
+                    }
+                    currentLocation = e.y
+                    widgetState(e)
+                    isClicked(e)
                 }
             })
         })
 
-        scroll.mouseup(function(evt){
-            console.log('mouse stops')
+        scroll.mouseup(function(event){
+            // console.log('mouse stops')
             scroll.off('mousemove')
+            widgetState(event)
         })
-        scroll.mouseleave(function(evt){
-            console.log('mouse stops')
+        scroll.mouseleave(function(event){
+            // console.log('mouse stops')
             scroll.off('mousemove')
+            widgetState(event)
         })
         
         
         bar.click(function(event){
-            console.log('mouse click')
+            // console.log('mouse click')
+            console.log(event.y)
+            // scroll.attr('y', event.y)
+            // isClicked(event)
 
             if(event.y > 50 && event.y < 357){
                 // top of scroll bar
@@ -364,11 +389,21 @@ var MyToolkit = (function() {
                     scroll.attr('y', event.y - 21)
                 }
                 isClicked(event)
+                widgetState(event)
+                var distance = currentLocation - event.y
+                if(distance > 0){
+                    direction('up')
+                }
+                else{
+                    direction('down')
+                }
+                currentLocation = event.y
+                
             }
         })
 
         up.click(function(event){
-            console.log('up')
+            // console.log(box.y())
             var currentY = scroll.attr('y')
             console.log(currentY)
             if(currentY > 50){
@@ -378,16 +413,19 @@ var MyToolkit = (function() {
                 else{
                     scroll.attr('y', currentY - 5)
                 }
-                
+                isClicked(event)
+                widgetState(event)
+                direction('up')
+                currentLocation = event.y
             }
             
         })
        
 
         down.click(function(event){
-            console.log('down')
+            // console.log('down')
             var currentY = scroll.attr('y')
-            console.log(currentY)
+            // console.log(currentY)
             if(currentY < 330 ){
                 if(currentY > 321){
                     scroll.attr('y', 328)
@@ -395,48 +433,146 @@ var MyToolkit = (function() {
                 else{
                     scroll.attr('y', currentY + 5)
                 }
-                
+                isClicked(event)
+                widgetState(event)
+                direction('down')
+                currentLocation = event.y
             }
         })
-       
+
+        box.mouseover(function(event){
+            widgetState(event)
+        })
         return{
-            move: function(x,y){
-                box.move(x,y);
-            },
             onclick: function(eventHandler){
                 isClicked = eventHandler
+            },
+            setHeight: function(x){
+                box.height(x)
+            },
+            position: box.y(),
+            scrollDirection: function(d){
+                direction = d
+            },
+            state: function(eventHandler){
+                widgetState = eventHandler
             }
+
         }
     }
 
 
     var ProgressBar = function(){
-        var box = draw.group();
-        var rect = box.rect(300, 21).stroke('black').fill('white')
-        rect.attr('rx', 8)
-
         var bar = draw.group();
-        // Expose a custom property to set the width of the progress bar.
-        var loadbar = bar.rect(293, 14).stroke('black').fill('white').move(3,3)
+        var length = 200
+
+        var loadbar = bar.rect(length, 14).stroke('black').fill('white').move(3,3)
         loadbar.attr('rx', 8)
         var progress = bar.rect(0, 14).stroke('black').fill('#ce99ff').move(3,3)
         progress.attr('rx', 8)
-        var runner = progress.animate(300, '-').delay(100).animate().size(293,14)
-
+        var increment = 100
+        // increment
+        // var runner = progress.animate(300, '-').delay(100).animate().size(293,14)
+        // var runner = progress.animate({
+        //     duration: 2000, 
+        //     delay: 1000, 
+        //     when: 'now',
+        //     wait: 200,
+        // })
+        // for(var i = 5; i <= 200; i++){
+        //     if(increment % i == 0){
+        //         progress.animate({duration: 200}).size(i, width)
+        //         console.log('hi')
+        //     }
+        //     // else{
+        //     //     progress.animate({duration: 2000}).size(200, width)
+        //     // }
+            
+        // }
         
-        box.add(bar)
+        var i = 1;
+        while(i <= length){
+            progress.animate({duration: 200}).size(i, 14)
+            i += increment
+        }
+        // progress.animate({duration: 200}).size(200, width)
+        progress.animate().size(length, 14)
+
+        bar.move(450, 200);
+        
         
         return {
-            move: function(x,y){
-                box.move(x,y);
+            width: function(w){
+                bar.width(w);
             },
-            width: function(x,y){
-                loadbar.size(x,y);
+            // setIncrement: function(pos){
+            //     increment = pos;
+            // },
+            getIncrement: increment,
+            incrementBar: function(l){
+                length = l;
             }
         }
     }
 
-return {Button, RadioButton, CheckBox, TextBox, ScrollBar, ProgressBar}
+    var Spinner = function() {
+        var box = draw.group();
+        var rect = box.rect(80,30).fill('white').stroke('grey')
+        var text = box.text('0').move(35,5)
+
+        var upClicker = draw.group();
+        var upButton = upClicker.rect(15,15).fill('#ccb8e0').stroke('grey')
+        // var downButton = clicker.rect(15,15).fill('#cccccc').stroke('#cccccc')
+
+        var downClicker = draw.group();
+        var downButton = downClicker.rect(15,15).fill('#ccb8e0').stroke('grey')
+
+
+        var up = draw.group();
+        var upArrow1 = up.line(10, 10, 15, 15).stroke({ width: 2, color: "black", linecap: 'round' })
+        var upArrow2 = up.line(5, 15, 10, 10).stroke({ width: 2, color: "black" , linecap: 'round'})
+        up.move(3,5)
+
+        var down = draw.group();
+        var downArrow1 = down.line(10, 15, 15, 10).stroke({ width: 2, color: "black", linecap: 'round' })
+        var downArrow2 = down.line(5, 10, 10, 15).stroke({ width: 2, color: "black" , linecap: 'round'})
+        down.move(3,5)
+
+        upClicker.add(up)
+        upClicker.move(80,0)
+
+        downClicker.add(down)
+        downClicker.move(80,15)
+        
+
+
+        
+
+        box.add(upClicker)
+        box.add(downClicker)
+        
+
+
+        upClicker.click(function(){
+            var val = parseInt(text.text()) + 1
+            text.text(val.toString())
+            // console.log(parseInt(text.text()+1))
+        })
+        downClicker.click(function(){
+            var val = parseInt(text.text()) - 1
+            text.text(val.toString())
+            // console.log(parseInt(text.text()+1))
+        })
+
+        return{
+            move: function(x,y){
+                box.move(x,y)
+            }
+        }
+
+    }
+
+return {Button, RadioButton, CheckBox, TextBox, ScrollBar, ProgressBar, Spinner}
 }());
 
 export{MyToolkit}
