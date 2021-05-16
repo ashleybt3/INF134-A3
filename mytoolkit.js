@@ -322,7 +322,7 @@ var MyToolkit = (function() {
 
         box.add(up)
         box.add(down)
-        box.move(800, 50);
+        // box.move(800, 50);
 
         console.log(bar.y())
 
@@ -444,6 +444,9 @@ var MyToolkit = (function() {
             widgetState(event)
         })
         return{
+            move: function(x,y){
+                box.move(x,y);
+            },
             onclick: function(eventHandler){
                 isClicked = eventHandler
             },
@@ -464,54 +467,66 @@ var MyToolkit = (function() {
 
     var ProgressBar = function(){
         var bar = draw.group();
-        var length = 200
+        var barWidth = 200
+        var barHeight = 15
+        var incVal = null
+        var incrementState = null
+        var widgetState = null
+        var hasIncremented = null
+    
+        
 
-        var loadbar = bar.rect(length, 14).stroke('black').fill('white').move(3,3)
+        var loadbar = bar.rect(barWidth, barHeight).stroke('black').fill('white').move(3,3)
         loadbar.attr('rx', 8)
-        var progress = bar.rect(0, 14).stroke('black').fill('#ce99ff').move(3,3)
+        var progress = bar.rect(0, barHeight).stroke('black').fill('#ce99ff').move(3,3)
         progress.attr('rx', 8)
-        var increment = 100
-        // increment
-        // var runner = progress.animate(300, '-').delay(100).animate().size(293,14)
-        // var runner = progress.animate({
-        //     duration: 2000, 
-        //     delay: 1000, 
-        //     when: 'now',
-        //     wait: 200,
-        // })
-        // for(var i = 5; i <= 200; i++){
-        //     if(increment % i == 0){
-        //         progress.animate({duration: 200}).size(i, width)
-        //         console.log('hi')
-        //     }
-        //     // else{
-        //     //     progress.animate({duration: 2000}).size(200, width)
-        //     // }
-            
-        // }
-        
-        var i = 1;
-        while(i <= length){
-            progress.animate({duration: 200}).size(i, 14)
-            i += increment
-        }
-        // progress.animate({duration: 200}).size(200, width)
-        progress.animate().size(length, 14)
 
-        bar.move(450, 200);
-        
-        
+        progress.on('increment', function(event){
+            // console.log(event)
+            hasIncremented(event)
+        })
+
+        function whenIncremented(){
+            progress.fire('increment')
+        }
+
+        bar.mouseover(function(event){
+            widgetState(event)
+        })
+        bar.mouseout(function(event){
+            widgetState(event)
+        })
+        bar.click(function(event){
+            widgetState(event)
+        })
+            
         return {
+            move: function(x,y){
+                bar.move(x,y)
+            },
             width: function(w){
                 bar.width(w);
             },
-            // setIncrement: function(pos){
-            //     increment = pos;
-            // },
-            getIncrement: increment,
-            incrementBar: function(l){
-                length = l;
+            setIncrement: function(inc){
+                progress.remember('val', inc)
+            },
+            onIncrement: function(eventHandler){
+                hasIncremented = eventHandler
+            },
+            incrementBar: function(inc){
+                progress.size(inc, barHeight)
+                whenIncremented()
+            },
+            getIncrement: function(){
+                return progress.remember('val')
+            },
+            incremented: function(eventHandler){
+                incrementState = eventHandler
+            },
+            state: function(eventHandler){
+                widgetState = eventHandler
             }
+
         }
     }
 
@@ -543,11 +558,7 @@ var MyToolkit = (function() {
 
         downClicker.add(down)
         downClicker.move(80,15)
-        
-
-
-        
-
+    
         box.add(upClicker)
         box.add(downClicker)
         
@@ -556,12 +567,25 @@ var MyToolkit = (function() {
         upClicker.click(function(){
             var val = parseInt(text.text()) + 1
             text.text(val.toString())
-            // console.log(parseInt(text.text()+1))
+            upClicker.attr('cursor', 'auto')
         })
         downClicker.click(function(){
             var val = parseInt(text.text()) - 1
             text.text(val.toString())
-            // console.log(parseInt(text.text()+1))
+            downClicker.attr('cursor', 'auto')
+        })
+
+        upClicker.mouseover(function(){
+            upClicker.attr('cursor', 'pointer')
+        })
+        downClicker.mouseover(function(){
+            downClicker.attr('cursor', 'pointer')
+        })
+        upClicker.mouseup(function(){
+            upClicker.attr('cursor', 'auto')
+        })
+        downClicker.mouseup(function(){
+            downClicker.attr('cursor', 'auto')
         })
 
         return{
