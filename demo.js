@@ -87,16 +87,21 @@ textbox.state(function(e){
 var scrollbar = new MyToolkit.ScrollBar;
 // positionable by consuming code
 scrollbar.move(750, 50);
-
+// Expose a custom property to set the height of the scroll bar.
+scrollbar.setHeight(300);
+// Expose a custom property to get the position of the scroll thumb.
+scrollbar.position(function(pos){
+	console.log("Scroll Thumb Position:", pos);
+})
+// Expose an event handler that notifies consuming code when the scroll thumb has moved and in which direction.
 scrollbar.onclick(function(e){
 	console.log('Scroll Bar state has been changed!')
 	console.log(e);
-	
-	// console.log(scrollbar.position());
 });
 scrollbar.scrollDirection(function(d){
 	console.log("Scroll Bar Direction: ", d);
 });
+// Expose an event handler that notifies consuming code when the widget state has changed.
 scrollbar.state(function(e){
 	console.log('Scroll Bar widget state has been changed!')
 	console.log(e);

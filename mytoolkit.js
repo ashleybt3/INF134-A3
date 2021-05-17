@@ -3,9 +3,20 @@
 import {SVG} from './svg.min.js';
 
 
-
+/**
+ * Represents a Toolkit Class
+ * @constructor
+ * @param  {} - Initialize new toolkit to include 7 new GUI widgets
+ */
 var MyToolkit = (function() {
     var draw = SVG().addTo('body').size('100%','100%');
+    /** 
+     * Create a Button Widget 
+     * @return {itself} - Returns the button object's move attribute
+     * @return {event handler} - Returns the event handler when the button object's widget state has changed
+     * @return {event handler} - Returns the event handler when the button object has been clicked
+     * @return {string} - Returns the button object's text attribute 
+     */
     var Button = function(){
         
         var button = draw.group();
@@ -52,9 +63,15 @@ var MyToolkit = (function() {
         }
     }
     
-    var CheckBox = function(){
+     /** 
+     * Create a Check Box Widget 
+     * @return {itself} - Returns the box object's move attribute
+     * @return {string} - Returns the text object's text attribute 
+     * @return {event handler} - Returns the event handler when the box object has been clicked
+     * @return {event handler} - Returns the event handler when the box object's widget state has changed
+     */
 
-        
+    var CheckBox = function(){
         var currentState = null
         var widgetState = null
         var clickedState = false
@@ -304,8 +321,7 @@ var MyToolkit = (function() {
         var upArrow1 = up.line(10, 10, 15, 15).stroke({ width: 2, color: "black", linecap: 'round' })
         var upArrow2 = up.line(5, 15, 10, 10).stroke({ width: 2, color: "black" , linecap: 'round'})
 
-        
-
+    
         var down = draw.group();
         var downBox = down.rect(21, 21).stroke('grey').fill('#ccc9cf')
 
@@ -319,125 +335,75 @@ var MyToolkit = (function() {
         var currentLocation = scroll.attr('y')
         var direction = null
         var widgetState = null
+        var scrollThumb = null
 
         box.add(up)
         box.add(down)
-        // box.move(800, 50);
-
-        console.log(bar.y())
 
         scroll.mousedown(function(event){
-            // console.log('mouse down')
 
             scroll.mousemove(function(e){
-                // scroll.attr('y', event.y)
-                
-                if(e.y > 50 && e.y < 357){
-                    // top of scroll bar
-                    if(e.y < 72){
-                        scroll.attr('y', 51)
-                    }
-                    // bottom of scroll bar
-                    else if(e.y > 349){
-                        scroll.attr('y', 328)
-                    }
-                    else{
-                        scroll.attr('y', e.y - 21)
-                    }
-                    var distance = currentLocation - event.y
-                    if(distance > 0){
-                        direction('up')
-                    }
-                    else{
-                        direction('down')
-                    }
-                    currentLocation = e.y
-                    widgetState(e)
-                    isClicked(e)
-                }
-            })
-        })
-
-        scroll.mouseup(function(event){
-            // console.log('mouse stops')
-            scroll.off('mousemove')
-            widgetState(event)
-        })
-        scroll.mouseleave(function(event){
-            // console.log('mouse stops')
-            scroll.off('mousemove')
-            widgetState(event)
-        })
-        
-        
-        bar.click(function(event){
-            // console.log('mouse click')
-            console.log(event.y)
-            // scroll.attr('y', event.y)
-            // isClicked(event)
-
-            if(event.y > 50 && event.y < 357){
-                // top of scroll bar
-                if(event.y < 72){
-                    scroll.attr('y', 51)
-                }
-                // bottom of scroll bar
-                else if(event.y > 349){
-                    scroll.attr('y', 328)
-                }
-                else{
-                    scroll.attr('y', event.y - 21)
-                }
-                isClicked(event)
-                widgetState(event)
-                var distance = currentLocation - event.y
+                scroll.attr('y', e.clientY)
+                var distance = currentLocation - e.clientY
                 if(distance > 0){
                     direction('up')
                 }
                 else{
                     direction('down')
                 }
-                currentLocation = event.y
-                
-            }
+                currentLocation = e.clientY
+                widgetState(e)
+                isClicked(e)
+                scrollThumb(e.clientY)
+            })
         })
 
-        up.click(function(event){
-            // console.log(box.y())
-            var currentY = scroll.attr('y')
-            console.log(currentY)
-            if(currentY > 50){
-                if(currentY < 55){
-                    scroll.attr('y', 51)
-                }
-                else{
-                    scroll.attr('y', currentY - 5)
-                }
-                isClicked(event)
-                widgetState(event)
-                direction('up')
-                currentLocation = event.y
-            }
-            
+        scroll.mouseup(function(event){
+            scroll.off('mousemove')
+            widgetState(event)
         })
-       
+        scroll.mouseleave(function(event){
+            scroll.off('mousemove')
+            widgetState(event)
+        })
+        
+        
+        bar.click(function(event){           
+            scroll.attr('y', event.clientY)
+
+            isClicked(event)
+            widgetState(event)
+            scrollThumb(event.clientY)
+            var distance = currentLocation - event.clientY
+            if(distance > 0){
+                direction('up')
+            }
+            else{
+                direction('down')
+            }
+            currentLocation = event.clientY
+        })
+        up.click(function(event){
+            var currentY = scroll.attr('y')
+            scroll.attr('y', currentY - 5)
+            isClicked(event)
+            widgetState(event)
+            scrollThumb(event.clientY)
+            direction('up')
+
+            currentLocation = event.clientY
+        })
 
         down.click(function(event){
-            // console.log('down')
             var currentY = scroll.attr('y')
-            // console.log(currentY)
-            if(currentY < 330 ){
-                if(currentY > 321){
-                    scroll.attr('y', 328)
-                }
-                else{
-                    scroll.attr('y', currentY + 5)
-                }
-                isClicked(event)
-                widgetState(event)
-                direction('down')
-                currentLocation = event.y
-            }
+            scroll.attr('y', currentY + 5)
+
+            isClicked(event)
+            widgetState(event)
+            scrollThumb(event.clientY)
+            direction('down')
+            currentLocation = event.clientY
+
         })
 
         box.mouseover(function(event){
@@ -453,7 +419,9 @@ var MyToolkit = (function() {
             setHeight: function(x){
                 box.height(x)
             },
-            position: box.y(),
+            position: function(pos){
+                scrollThumb = pos
+            },
             scrollDirection: function(d){
                 direction = d
             },
@@ -463,8 +431,7 @@ var MyToolkit = (function() {
 
         }
     }
-
-
+    
     var ProgressBar = function(){
         var bar = draw.group();
         var barWidth = 200
