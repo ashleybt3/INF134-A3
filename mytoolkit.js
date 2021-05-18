@@ -6,7 +6,13 @@ import {SVG} from './svg.min.js';
 /**
  * Represents a Toolkit Class
  * @constructor
- * @param  {} - Initialize new toolkit to include 7 new GUI widgets
+ * @return {Button} - Returns a Button type object
+ * @return {CheckBox} - Returns a Check Box type object
+ * @return {RadioButton} - Returns a Radio Button type object
+ * @return {TextBox} - Returns a Text Box type object
+ * @return {ScrollBar} - Returns a Scroll Bar type object
+ * @return {ProgressBar} - Returns a Progress Bar type object
+ * @return {Spinner} - Returns a Spinner type object
  */
 var MyToolkit = (function() {
     var draw = SVG().addTo('body').size('100%','100%');
@@ -174,6 +180,14 @@ var MyToolkit = (function() {
         }
     }
 
+    /**
+     * Create a Radio Button Widget
+     * @return {itself} - Returns the button object's move attribute
+     * @return {string} - Returns the text 1 object's text attribute 
+     * @return {string} - Returns the text 2 object's text attribute 
+     * @return {event handler} - Returns the event handler when the button object's widget state has changed
+     * @return {event handler} - Returns the event handler when the button object has been clicked
+     */
     var RadioButton = function() {
         var button = draw.group();
 
@@ -248,6 +262,14 @@ var MyToolkit = (function() {
         }
     }
     
+
+    /**
+     * Create a Text Box Widget
+     * @return {itself} - Returns the box object's move attribute
+     * @return {string} - Returns the box object's text content
+     * @return {event handler} - Returns the event handler when the box object's text content has changed
+     * @return {event handler} - Returns the event handler when the box object' widgets state has changed
+     */
     var TextBox = function(){
         var box = draw.group();
         var textContent = null
@@ -309,6 +331,15 @@ var MyToolkit = (function() {
         }
     }
 
+    /**
+     * Create a Scroll Bar Widget
+     * @return {itself} - Returns the box object's move attribute
+     * @return {event handler} - Returns the event handler when the box object has been clicked
+     * @return {itself} - Returns the box object's height attribute
+     * @return {number} - Returns the scroll thumb's position
+     * @return {string} - Returns the scroll thumb's direction (up or down)
+     * @return {event handler} - Returns the event handler when box object's widget state has changed
+     */
     var ScrollBar = function(){
         var box = draw.group();
         var bar = box.rect(21, 300).stroke('grey').fill('white')
@@ -431,7 +462,17 @@ var MyToolkit = (function() {
 
         }
     }
-    
+
+
+    /**
+     * Create a Progress Bar Widget
+     * @return {itself} - Returns the bar object's move attribute
+     * @return {itself} - Returns the bar object's width attribute
+     * @return {itself} - Returns the progress object's remember attribute to access the increment value
+     * @return {event handler} - Returns the event handler when the progress bar has incremented
+     * @return {number} - Returns the increment value from the progress object's remember attribute
+     * @return {event handler} - Returns the event handler when the widget state has changed
+     */
     var ProgressBar = function(){
         var bar = draw.group();
         var barWidth = 200
@@ -449,7 +490,6 @@ var MyToolkit = (function() {
         progress.attr('rx', 8)
 
         progress.on('increment', function(event){
-            // console.log(event)
             hasIncremented(event)
         })
 
@@ -493,18 +533,21 @@ var MyToolkit = (function() {
             state: function(eventHandler){
                 widgetState = eventHandler
             }
-
         }
     }
 
+    /**
+     * Create a Custom Widget: Spinner
+     * @return {itself} - Returns the bar object's move attribute
+     */
     var Spinner = function() {
         var box = draw.group();
         var rect = box.rect(80,30).fill('white').stroke('grey')
         var text = box.text('0').move(35,5)
+        var widgetState = null
 
         var upClicker = draw.group();
         var upButton = upClicker.rect(15,15).fill('#ccb8e0').stroke('grey')
-        // var downButton = clicker.rect(15,15).fill('#cccccc').stroke('#cccccc')
 
         var downClicker = draw.group();
         var downButton = downClicker.rect(15,15).fill('#ccb8e0').stroke('grey')
@@ -531,33 +574,42 @@ var MyToolkit = (function() {
         
 
 
-        upClicker.click(function(){
+        upClicker.click(function(event){
             var val = parseInt(text.text()) + 1
             text.text(val.toString())
             upClicker.attr('cursor', 'auto')
+            widgetState(event)
         })
-        downClicker.click(function(){
+        downClicker.click(function(event){
             var val = parseInt(text.text()) - 1
             text.text(val.toString())
             downClicker.attr('cursor', 'auto')
+            widgetState(event)
         })
 
-        upClicker.mouseover(function(){
+        upClicker.mouseover(function(event){
             upClicker.attr('cursor', 'pointer')
+            widgetState(event)
         })
-        downClicker.mouseover(function(){
+        downClicker.mouseover(function(event){
             downClicker.attr('cursor', 'pointer')
+            widgetState(event)
         })
-        upClicker.mouseup(function(){
+        upClicker.mouseup(function(event){
             upClicker.attr('cursor', 'auto')
+            widgetState(event)
         })
-        downClicker.mouseup(function(){
+        downClicker.mouseup(function(event){
             downClicker.attr('cursor', 'auto')
+            widgetState(event)
         })
 
         return{
             move: function(x,y){
                 box.move(x,y)
+            },
+            state: function(eventHandler){
+                widgetState = eventHandler
             }
         }
 

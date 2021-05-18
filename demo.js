@@ -137,8 +137,8 @@ function inc(){
 }
 // Expose an event handler that notifies consuming code when the progress bar has incremented.
 progressbar.onIncrement(function(e){
-	// console.log('Progress Bar has been incremented!')
-	// console.log(e);
+	console.log('Progress Bar has been incremented!')
+	console.log(e);
 });
 // Expose an event handler that notifies consuming code when the widget state has changed.
 progressbar.state(function(e){
@@ -152,4 +152,8 @@ progressbar.state(function(e){
 var spinner = new MyToolkit.Spinner;
 // positionable by consuming code
 spinner.move(450, 300);
+spinner.state(function(e){
+	console.log("Spinner widget state has changed")
+	console.log(e)
+})
 // ******************************************
